@@ -87,7 +87,7 @@ scene.add(mesh)
 // load the texture
 var textureUrl		= THREEx.createGrassTufts.baseUrl+'textures/grass01.png'
 var material		= mesh.material
-material.map		= lodaer.load(textureUrl);
+material.map		= loader.load(textureUrl);
 material.alphaTest	= 0.7
 //////////////////////////////////////////////////////////////////////////////////
 //		comment								//
