@@ -7,7 +7,10 @@ document.body.appendChild( renderer.domElement );
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
 var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000);
-camera.position.z = 1;
+camera.position.z = 10;
+camera.position.y=10;
+
+var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
 
 
@@ -17,29 +20,26 @@ loader=new THREE.TextureLoader();
 //////////////////////////////////////////////////////////////////////////////////
 ;(function(){
     // add a ambient light
-    var light	= new THREE.AmbientLight( 0x020202 )
+    var light	= new THREE.AmbientLight(0x020202,0.5)
     scene.add( light )
     // add a light in front
-    var light	= new THREE.DirectionalLight('white', 1)
+    var light	= new THREE.DirectionalLight('white', 0.5)
     light.position.set(0.5, 0.5, 2)
     scene.add( light )
     // add a light behind
-    var light	= new THREE.DirectionalLight('white', 0.75)
+    var light	= new THREE.DirectionalLight('white', 0.5)
     light.position.set(-0.5, -0.5, -2)
     scene.add( light )		
 })()
 
 // add a light behind
-var light	= new THREE.DirectionalLight('white', 1)
-// var light	= new THREE.PointLight('white', 2)
-scene.add( light )
-light.position.y= 1
-onRenderFcts.push(function(delta, now){
-    var angle	= now*Math.PI*2 * 0.2
-    light.position.x= Math.cos(angle)*3
-    light.position.y= Math.sin(angle)*3
-    // light.position.z= Math.sin(angle)*3
-})
+
+// onRenderFcts.push(function(delta, now){
+//     var angle	= now*Math.PI*2 * 0.2
+//     light.position.x= Math.cos(angle)*3
+//     light.position.y= Math.sin(angle)*3
+//     // light.position.z= Math.sin(angle)*3
+// })
 
 //////////////////////////////////////////////////////////////////////////////////
 //		grass ground							//
@@ -51,7 +51,7 @@ texture.wrapS	= THREE.RepeatWrapping;
 texture.wrapT	= THREE.RepeatWrapping;
 texture.repeat.x= 10
 texture.repeat.y= 10
-texture.anisotropy = renderer.getMaxAnisotropy()
+texture.anisotropy = renderer.capabilities.getMaxAnisotropy()
 // build object3d
 var geometry	= new THREE.PlaneGeometry(20, 20)
 var material	= new THREE.MeshPhongMaterial({
@@ -85,7 +85,7 @@ for(var i = 0; i < nTufts; i++){
 var mesh	= THREEx.createGrassTufts(positions)
 scene.add(mesh)
 // load the texture
-var textureUrl		= THREEx.createGrassTufts.baseUrl+'textures/grass01.png'
+var textureUrl		= 'textures/grass01.png'
 var material		= mesh.material
 material.map		= loader.load(textureUrl);
 material.alphaTest	= 0.7
@@ -105,7 +105,7 @@ for(var i = 0; i < nTufts; i++){
 var mesh	= THREEx.createGrassTufts(positions)
 scene.add(mesh)
 // load the texture
-var textureUrl		= THREEx.createGrassTufts.baseUrl+'textures/grass02.png'
+var textureUrl		= 'textures/grass02.png'
 var material		= mesh.material
 material.map		= loader.load(textureUrl);
 material.alphaTest	= 0.7
@@ -125,7 +125,7 @@ var mesh	= THREEx.createGrassTufts(positions)
 scene.add(mesh)
 // load the texture
 var material		= mesh.material
-var textureUrl		= THREEx.createGrassTufts.baseUrl+'textures/flowers01.png'
+var textureUrl		= 'textures/flowers01.png'
 material.map		= loader.load(textureUrl);
 material.emissive.set(0x888888)
 material.alphaTest	= 0.7
@@ -145,7 +145,7 @@ var mesh	= THREEx.createGrassTufts(positions)
 scene.add(mesh)
 // load the texture
 var material		= mesh.material
-var textureUrl		= THREEx.createGrassTufts.baseUrl+'textures/flowers02.png'
+var textureUrl		= 'textures/flowers02.png'
 material.map		= loader.load(textureUrl);
 material.emissive.set(0x888888)
 material.alphaTest	= 0.7
@@ -155,12 +155,12 @@ material.alphaTest	= 0.7
 //////////////////////////////////////////////////////////////////////////////////
 var mouse	= {x : 0, y : 0}
 document.addEventListener('mousemove', function(event){
-    mouse.x	= (event.clientX / window.innerWidth ) - 0.5
-    mouse.y	= (event.clientY / window.innerHeight) - 0.5
+    // mouse.x	= (event.clientX / window.innerWidth ) - 0.5
+    // mouse.y	= (event.clientY / window.innerHeight) - 0.5
 }, false)
 onRenderFcts.push(function(delta, now){
-    camera.position.x += (mouse.x*2 - camera.position.x) * (delta*3)
-    camera.position.y += (mouse.y*2 - camera.position.y) * (delta*3)
+    //camera.position.x += (mouse.x*2 - camera.position.x) * (delta*3)
+    //camera.position.y += (mouse.y*2 - camera.position.y) * (delta*3)
     camera.lookAt( scene.position )
 })
 //////////////////////////////////////////////////////////////////////////////////
@@ -175,6 +175,8 @@ onRenderFcts.push(function(){
 //////////////////////////////////////////////////////////////////////////////////
 var lastTimeMsec= null
 requestAnimationFrame(function animate(nowMsec){
+
+    stats.update();
     // keep looping
     requestAnimationFrame( animate );
     // measure time
